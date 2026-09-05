@@ -1,0 +1,7 @@
+CREATE DATABASE IF NOT EXISTS relay_db;
+USE relay_db;
+
+CREATE TABLE IF NOT EXISTS users (id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(120) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE, username VARCHAR(80) NOT NULL UNIQUE, password_hash TEXT NOT NULL, role VARCHAR(16) NOT NULL DEFAULT 'USER', created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, last_login TIMESTAMP NULL);
+CREATE TABLE IF NOT EXISTS request_logs (id BIGINT AUTO_INCREMENT PRIMARY KEY, url TEXT NOT NULL, method VARCHAR(16) NOT NULL, thread_id VARCHAR(80) NOT NULL, cache_hit BOOLEAN NOT NULL, status_code INT, response_time_ms DECIMAL(12,2), request_size INT, response_size INT, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX request_logs_created_idx (created_at), INDEX request_logs_thread_idx (thread_id), INDEX request_logs_hit_idx (cache_hit), INDEX request_logs_url_idx (url(255)));
+CREATE TABLE IF NOT EXISTS cache_metadata (id BIGINT AUTO_INCREMENT PRIMARY KEY, url VARCHAR(2048) NOT NULL, size_bytes BIGINT NOT NULL, hit_count BIGINT NOT NULL DEFAULT 0, last_accessed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, UNIQUE INDEX cache_metadata_url_idx (url(768)));
+CREATE TABLE IF NOT EXISTS server_metrics (id BIGINT AUTO_INCREMENT PRIMARY KEY, active_threads INT, active_connections INT, total_requests BIGINT, cache_hits BIGINT, cache_misses BIGINT, average_response_time DECIMAL(12,2), recorded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);

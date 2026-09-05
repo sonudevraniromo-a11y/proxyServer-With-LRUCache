@@ -1,0 +1,1 @@
+Core ownership map: main.c owns accept and worker lifecycle; request_queue.c owns bounded producer-consumer synchronization; http_parser.c validates GET and Host; lru_cache.c owns the hash buckets plus MRU-to-LRU list. Slow remote sockets are never accessed while the cache mutex is held.
